@@ -1,0 +1,375 @@
+import { CellType } from "../types/Game";
+import type { LevelConfig } from "../types/Level";
+
+const createGrid = (): CellType[][] => {
+  const grid: CellType[][] = Array(50)
+    .fill(null)
+    .map(() => Array(50).fill(CellType.TOWER_SLOT));
+
+  // Create "The Labyrinth" - complex maze with multiple decision points
+  const pathCoords = [
+    // Start from top-center
+    [25, 0],
+    [25, 1],
+    [25, 2],
+    [25, 3],
+    [25, 4],
+    [25, 5],
+    // First decision point - branch left
+    [24, 6],
+    [23, 7],
+    [22, 8],
+    [21, 9],
+    [20, 10],
+    [19, 11],
+    [18, 12],
+    [17, 13],
+    [16, 14],
+    [15, 15],
+    [14, 16],
+    [13, 17],
+    // Sharp turn down and right
+    [12, 18],
+    [11, 19],
+    [10, 20],
+    [9, 21],
+    [8, 22],
+    [7, 23],
+    [6, 24],
+    [5, 25],
+    [4, 26],
+    [3, 27],
+    [2, 28],
+    [1, 29],
+    [0, 30],
+    // Move along bottom edge
+    [1, 31],
+    [2, 32],
+    [3, 33],
+    [4, 34],
+    [5, 35],
+    [6, 36],
+    [7, 37],
+    [8, 38],
+    [9, 39],
+    [10, 40],
+    [11, 41],
+    [12, 42],
+    // Start climbing back up through center
+    [13, 41],
+    [14, 40],
+    [15, 39],
+    [16, 38],
+    [17, 37],
+    [18, 36],
+    [19, 35],
+    [20, 34],
+    [21, 33],
+    [22, 32],
+    [23, 31],
+    [24, 30],
+    [25, 29],
+    [26, 28],
+    [27, 27],
+    [28, 26],
+    [29, 25],
+    [30, 24],
+    [31, 23],
+    [32, 22],
+    [33, 21],
+    [34, 20],
+    [35, 19],
+    [36, 18],
+    // Final approach to goal
+    [37, 17],
+    [38, 16],
+    [39, 15],
+    [40, 14],
+    [41, 13],
+    [42, 12],
+    [43, 11],
+    [44, 10],
+    [45, 9],
+    [46, 8],
+    [47, 7],
+    [48, 6],
+    [49, 5],
+  ];
+
+  // Create maze walls to force the specific path
+  const wallCoords = [
+    // Top section walls
+    [20, 5],
+    [21, 5],
+    [22, 5],
+    [23, 5],
+    [24, 5],
+    [26, 5],
+    [27, 5],
+    [28, 5],
+    [29, 5],
+    [30, 5],
+    [20, 6],
+    [21, 6],
+    [22, 6],
+    [23, 6],
+    [26, 6],
+    [27, 6],
+    [28, 6],
+    [29, 6],
+    [30, 6],
+    [15, 10],
+    [16, 10],
+    [17, 10],
+    [18, 10],
+    [19, 10],
+    [21, 10],
+    [22, 10],
+    [23, 10],
+    [24, 10],
+    [25, 10],
+    [15, 11],
+    [16, 11],
+    [17, 11],
+    [18, 11],
+    [20, 11],
+    [21, 11],
+    [22, 11],
+    [23, 11],
+    [24, 11],
+    [25, 11],
+    // Left section walls
+    [10, 15],
+    [11, 15],
+    [12, 15],
+    [13, 15],
+    [14, 15],
+    [16, 15],
+    [17, 15],
+    [18, 15],
+    [19, 15],
+    [20, 15],
+    [10, 16],
+    [11, 16],
+    [12, 16],
+    [13, 16],
+    [15, 16],
+    [16, 16],
+    [17, 16],
+    [18, 16],
+    [19, 16],
+    [20, 16],
+    [5, 20],
+    [6, 20],
+    [7, 20],
+    [8, 20],
+    [10, 20],
+    [11, 20],
+    [12, 20],
+    [13, 20],
+    [14, 20],
+    [15, 20],
+    [5, 21],
+    [6, 21],
+    [7, 21],
+    [8, 21],
+    [10, 21],
+    [11, 21],
+    [12, 21],
+    [13, 21],
+    [14, 21],
+    [15, 21],
+    // Bottom section walls
+    [0, 25],
+    [1, 25],
+    [2, 25],
+    [3, 25],
+    [6, 25],
+    [7, 25],
+    [8, 25],
+    [9, 25],
+    [10, 25],
+    [1, 26],
+    [2, 26],
+    [3, 26],
+    [5, 26],
+    [6, 26],
+    [7, 26],
+    [8, 26],
+    [9, 26],
+    [10, 26],
+    [15, 35],
+    [16, 35],
+    [17, 35],
+    [18, 35],
+    [20, 35],
+    [21, 35],
+    [22, 35],
+    [23, 35],
+    [24, 35],
+    [25, 35],
+    [15, 36],
+    [16, 36],
+    [17, 36],
+    [18, 36],
+    [20, 36],
+    [21, 36],
+    [22, 36],
+    [23, 36],
+    [24, 36],
+    [25, 36],
+    // Right section walls
+    [25, 20],
+    [26, 20],
+    [27, 20],
+    [28, 20],
+    [30, 20],
+    [31, 20],
+    [32, 20],
+    [33, 20],
+    [34, 20],
+    [35, 20],
+    [25, 21],
+    [26, 21],
+    [27, 21],
+    [28, 21],
+    [30, 21],
+    [31, 21],
+    [32, 21],
+    [33, 21],
+    [34, 21],
+    [35, 21],
+    [35, 15],
+    [36, 15],
+    [37, 15],
+    [38, 15],
+    [40, 15],
+    [41, 15],
+    [42, 15],
+    [43, 15],
+    [44, 15],
+    [45, 15],
+    [35, 16],
+    [36, 16],
+    [37, 16],
+    [38, 16],
+    [40, 16],
+    [41, 16],
+    [42, 16],
+    [43, 16],
+    [44, 16],
+    [45, 16],
+    [40, 10],
+    [41, 10],
+    [42, 10],
+    [43, 10],
+    [45, 10],
+    [46, 10],
+    [47, 10],
+    [48, 10],
+    [49, 10],
+    [40, 11],
+    [41, 11],
+    [42, 11],
+    [43, 11],
+    [45, 11],
+    [46, 11],
+    [47, 11],
+    [48, 11],
+    [49, 11],
+  ];
+
+  // Create some dead-end traps (blocked areas that look like they might be paths)
+  const trapCoords = [
+    [26, 7],
+    [27, 8],
+    [28, 9],
+    [29, 10], // Right side fake path
+    [15, 25],
+    [16, 26],
+    [17, 27],
+    [18, 28], // Center fake path
+    [35, 30],
+    [36, 31],
+    [37, 32],
+    [38, 33], // Right bottom fake path
+  ];
+
+  // Set path cells
+  for (const coord of pathCoords) {
+    const [x, y] = coord;
+    if (x !== undefined && y !== undefined && x >= 0 && x < 50 && y >= 0 && y < 50) {
+      const row = grid[y];
+      if (row) {
+        row[x] = CellType.PATH;
+      }
+    }
+  }
+
+  // Set wall cells as blocked
+  for (const coord of [...wallCoords, ...trapCoords]) {
+    const [x, y] = coord;
+    if (x !== undefined && y !== undefined && x >= 0 && x < 50 && y >= 0 && y < 50) {
+      const row = grid[y];
+      if (row) {
+        row[x] = CellType.BLOCKED;
+      }
+    }
+  }
+
+  // Set spawn and goal
+  const spawnRow = grid[0];
+  const goalRow = grid[5];
+  if (spawnRow) spawnRow[25] = CellType.SPAWN;
+  if (goalRow) goalRow[49] = CellType.GOAL;
+
+  return grid;
+};
+
+export const level10: LevelConfig = {
+  id: "level10",
+  name: "The Labyrinth",
+  description: "Navigate a complex maze with limited optimal tower positions",
+  difficulty: 4,
+  grid: createGrid(),
+  spawn: { x: 25, y: 0 },
+  goal: { x: 49, y: 5 },
+  waves: [
+    {
+      id: 1,
+      enemies: [{ count: 8, interval: 1100, enemyType: "basic" }],
+      delay: 1000,
+    },
+    {
+      id: 2,
+      enemies: [{ count: 12, interval: 950, enemyType: "basic" }],
+      delay: 2000,
+    },
+    {
+      id: 3,
+      enemies: [{ count: 16, interval: 800, enemyType: "basic" }],
+      delay: 2500,
+    },
+    {
+      id: 4,
+      enemies: [{ count: 20, interval: 700, enemyType: "basic" }],
+      delay: 3000,
+    },
+    {
+      id: 5,
+      enemies: [{ count: 25, interval: 600, enemyType: "basic" }],
+      delay: 3500,
+    },
+    {
+      id: 6,
+      enemies: [{ count: 30, interval: 550, enemyType: "basic" }],
+      delay: 4000,
+    },
+    {
+      id: 7,
+      enemies: [{ count: 35, interval: 500, enemyType: "basic" }],
+      delay: 4500,
+    },
+  ],
+  startingMoney: 160,
+};

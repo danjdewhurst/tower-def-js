@@ -1,0 +1,5 @@
+# Run Biome to fix formatting and linting issues
+bunx biome check --write --unsafe .
+
+# Re-add any files that were modified by Biome
+git add -A

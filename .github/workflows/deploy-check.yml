@@ -1,0 +1,32 @@
+name: Deployment Check
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-check:
+    name: Deployment Readiness
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      
+    - name: Install dependencies
+      run: bun install
+      
+    - name: Start server (background)
+      run: bun --hot ./index.ts &
+      
+    - name: Wait for server
+      run: sleep 5
+      
+    - name: Test server response
+      run: curl -f http://localhost:3000 || exit 1
+      
+    - name: Stop background processes
+      run: pkill -f "bun.*index.ts" || true

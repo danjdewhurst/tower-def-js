@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #1a1a1a;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            width: 100vw;
+        }
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            padding-top: 60px; /* Account for fixed HUD */
+            display: flex;
+            flex-direction: column;
+        }
+        #gameCanvas {
+            border: none;
+            background: #2a2a2a;
+            cursor: crosshair;
+            flex: 1;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #gameHUD {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        #controls {
+            display: flex;
+            gap: 10px;
+        }
+        #towerSelector {
+            position: fixed !important;
+            bottom: 10px !important;
+            left: 10px !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            padding: 10px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            gap: 10px !important;
+            z-index: 1000 !important;
+            backdrop-filter: blur(5px) !important;
+        }
+        #levelSelectorContainer {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #cameraControls {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            display: none;
+        }
+        #cameraControls button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+        button {
+            padding: 8px 16px;
+            background: #4a4a4a;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #5a5a5a;
+        }
+        .tower-btn {
+            width: 60px !important;
+            height: 60px !important;
+            border: 2px solid #666 !important;
+            color: white !important;
+            cursor: pointer !important;
+            border-radius: 4px !important;
+            font-weight: bold !important;
+        }
+        .tower-btn.selected {
+            border-color: #FFF !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="levelSelectorContainer"></div>
+    <div id="gameContainer" style="display: none;">
+        <div id="gameHUD">
+            <div>Money: $<span id="money">100</span></div>
+            <div>Lives: <span id="lives">10</span></div>
+            <div>Wave: <span id="wave">1</span></div>
+            <div id="controls">
+                <button id="startWaveBtn">Start Wave</button>
+                <button id="pauseBtn">Pause</button>
+                <button id="menuBtn">Menu</button>
+            </div>
+        </div>
+        <div id="towerSelector">
+            <button id="basicTowerBtn" class="tower-btn selected" data-tower="basic" style="background: #00FF00; border-color: #FFF;">B<br>$50</button>
+            <button id="sniperTowerBtn" class="tower-btn" data-tower="sniper" style="background: #0080FF;">S<br>$100</button>
+            <button id="rapidTowerBtn" class="tower-btn" data-tower="rapid" style="background: #FF8000;">R<br>$75</button>
+        </div>
+        <div id="cameraControls">
+            <button id="resetCameraBtn">Reset View</button>
+            <button id="centerCameraBtn">Center</button>
+            <button id="zoomInBtn">Zoom In</button>
+            <button id="zoomOutBtn">Zoom Out</button>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

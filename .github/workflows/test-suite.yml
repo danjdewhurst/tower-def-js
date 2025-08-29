@@ -1,0 +1,36 @@
+name: Comprehensive Test Suite
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  test:
+    name: Full Test Suite
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      
+    - name: Install dependencies
+      run: bun install
+      
+    - name: Run all tests with coverage
+      run: bun test --coverage
+      env:
+        NODE_ENV: test
+      
+    - name: Performance tests
+      run: bun test ./src/testing/PerformanceTestSuite.ts
+      
+    - name: Stress tests  
+      run: bun test ./src/testing/StressTestSuite.ts
+      
+    - name: UI tests
+      run: bun test ./src/testing/UITestSuite.ts
